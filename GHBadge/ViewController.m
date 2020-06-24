@@ -14,6 +14,7 @@
 
 @property (nonatomic , strong) UILabel *test;
 @property (nonatomic , strong) NSMutableArray *tests;
+@property (nonatomic , strong) UIButton *action;
 
 @end
 
@@ -28,16 +29,21 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    
+    [self.view addPointWithTabVc:self.tabBarController pointWidth:5];
+    self.view.backgroundColor = [UIColor whiteColor];
     self.navigationItem.title = @"GHBadge";
     
     UIButton *action = [[UIButton alloc]init];
     [action setTitle:@"增加Badge" forState:UIControlStateNormal];
     [action setTitle:@"移除Badge" forState:UIControlStateSelected];
     [action setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
-    [action setTitleColor:[UIColor redColor] forState:UIControlStateSelected];
+    self.action = action;
+    
+   [action setTitleColor:[UIColor redColor] forState:UIControlStateSelected];
     [action addTarget:self action:@selector(clickAction:) forControlEvents:UIControlEventTouchUpInside];
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc]initWithCustomView:action];
-    
+
     UILabel *test1 = [[UILabel alloc]init];
     test1.text = @"测试一下";
     test1.textAlignment = NSTextAlignmentCenter;
@@ -47,6 +53,11 @@
         make.left.equalTo(self.view).offset(20);
         make.top.equalTo(self.view).offset(100);
     }];
+}
+
+- (void)viewDidLayoutSubviews {
+    [super viewDidLayoutSubviews];
+    [self.view addPointWithObject:self.action pointWidth:5];
 }
 
 - (void)clickAction:(UIButton *)button {

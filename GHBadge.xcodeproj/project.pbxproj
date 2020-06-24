@@ -26,6 +26,7 @@
 		0429304524A2EFB900066360 /* MASConstraint.m in Sources */ = {isa = PBXBuildFile; fileRef = 0429303A24A2EFB900066360 /* MASConstraint.m */; };
 		0429304624A2EFB900066360 /* MASViewConstraint.m in Sources */ = {isa = PBXBuildFile; fileRef = 0429303C24A2EFB900066360 /* MASViewConstraint.m */; };
 		0429304724A2EFB900066360 /* MASViewAttribute.m in Sources */ = {isa = PBXBuildFile; fileRef = 0429303D24A2EFB900066360 /* MASViewAttribute.m */; };
+		0429304A24A37C7700066360 /* GHTabBarController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0429304924A37C7700066360 /* GHTabBarController.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -89,6 +90,8 @@
 		0429303B24A2EFB900066360 /* ViewController+MASAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "ViewController+MASAdditions.h"; sourceTree = "<group>"; };
 		0429303C24A2EFB900066360 /* MASViewConstraint.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MASViewConstraint.m; sourceTree = "<group>"; };
 		0429303D24A2EFB900066360 /* MASViewAttribute.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MASViewAttribute.m; sourceTree = "<group>"; };
+		0429304824A37C7700066360 /* GHTabBarController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GHTabBarController.h; sourceTree = "<group>"; };
+		0429304924A37C7700066360 /* GHTabBarController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GHTabBarController.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -144,6 +147,8 @@
 				04292FED24A1E98A00066360 /* AppDelegate.m */,
 				04292FF224A1E98A00066360 /* ViewController.h */,
 				04292FF324A1E98A00066360 /* ViewController.m */,
+				0429304824A37C7700066360 /* GHTabBarController.h */,
+				0429304924A37C7700066360 /* GHTabBarController.m */,
 				0429302124A1EA9900066360 /* UIView+Badge.h */,
 				0429302224A1EA9900066360 /* UIView+Badge.m */,
 				04292FF524A1E98A00066360 /* Main.storyboard */,
@@ -349,6 +354,7 @@
 				0429303E24A2EFB900066360 /* NSLayoutConstraint+MASDebugAdditions.m in Sources */,
 				0429304224A2EFB900066360 /* MASLayoutConstraint.m in Sources */,
 				04292FFF24A1E99000066360 /* main.m in Sources */,
+				0429304A24A37C7700066360 /* GHTabBarController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
