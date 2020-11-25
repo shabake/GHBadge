@@ -30,10 +30,8 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    [self.view addPointWithTabVc:self.tabBarController pointWidth:5];
     self.view.backgroundColor = [UIColor whiteColor];
     self.navigationItem.title = @"GHBadge";
-    
     UIButton *action = [[UIButton alloc]init];
     [action setTitle:@"增加Badge" forState:UIControlStateNormal];
     [action setTitle:@"移除Badge" forState:UIControlStateSelected];
@@ -55,17 +53,14 @@
     }];
 }
 
-- (void)viewDidLayoutSubviews {
-    [super viewDidLayoutSubviews];
-    [self.view addPointWithObject:self.action pointWidth:5];
-}
-
 - (void)clickAction:(UIButton *)button {
     button.selected = !button.selected;
     if (button.selected) {
         [self.view addPointWithObject:self.test pointWidth:5];
+        [self.view addPointWithTabVc:self.tabBarController pointWidth:5];
     } else {
         [self.view removePointWithObject:self.test];
+        [self.view removePointWithTabVc:self.tabBarController];
     }
 }
 

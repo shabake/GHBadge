@@ -11,7 +11,7 @@
 NS_ASSUME_NONNULL_BEGIN
 
 /**
- *  给UIView增加角标
+ *  给UIView增加角标分类
  */
 @interface UIView (Badge)
 

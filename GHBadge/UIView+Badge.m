@@ -9,7 +9,6 @@
 #import "UIView+Badge.h"
 #import <objc/runtime.h>
 
-
 @interface UIView()
 
 @end
@@ -37,6 +36,7 @@ static NSString *GHBadgeKey = @"GHBadgeKey";
     if (!object) {
         return;
     }
+    
     [self addBadgeWithText:@"" backgroundColor:[UIColor redColor] textColor:[UIColor clearColor] font:0 badgeFrame:CGRectMake(object.frame.size.width -pointWidth * 0.5, -pointWidth * 0.5, pointWidth, pointWidth) superObject:object];
 }
 
