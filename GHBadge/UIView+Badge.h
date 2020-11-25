@@ -15,30 +15,31 @@ NS_ASSUME_NONNULL_BEGIN
  */
 @interface UIView (Badge)
 
+/**
+ *  给目标view增加角标
+ *  @param targetView 要添加角标的view
+ */
+- (void)addPointWithTarget:(UIView *)targetView;
 
-/// 给view增加角标
-/// @param object 要增加的目标view
-/// @param pointWidth 角标的宽度
-- (void)addPointWithObject:(UIView *)object pointWidth:(CGFloat)pointWidth;
+/**
+ *  给目标view移除角标
+ *  @param targetView  要移除角标的view
+ */
 
-/// 在场景中如何无法获得目标object的frame用此方法
-/// 给view增加角标
-/// @param object 要增加的目标view
-/// @param pointWidth 角标的宽度
-/// @param width   object的宽度
-- (void)addPointWithObject:(UIView *)object pointWidth:(CGFloat)pointWidth width:(CGFloat)width;
+- (void)removePointWithTarget:(UIView *)targetView;
 
-/// 给view移除角标
-/// @param object 要增加的目标view
-- (void)removePointWithObject:(UIView *)object;
+/**
+ *  给TabBarItem增加角标
+ *  @param tabVc 要添加角标的UITabBarController
+ */
 
-/// 给TabBarItem增加角标
-/// @param tabVc 要增加的目标tabBarController
-/// @param pointWidth 角标的宽度
-- (void)addPointWithTabVc:(UITabBarController *)tabVc pointWidth:(CGFloat)pointWidth;
+- (void)addPointWithTabVc:(UITabBarController *)tabVc;
 
-/// 给TabBarItem移除角标
-/// @param tabVc 要增加的目标tabBarController
+/**
+ *  给TabBarItem移除角标
+ *  @param tabVc 要移除角标的UITabBarController
+ */
+
 - (void)removePointWithTabVc:(UITabBarController *)tabVc;
 
 @end

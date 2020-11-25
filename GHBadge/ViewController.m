@@ -13,19 +13,11 @@
 @interface ViewController ()
 
 @property (nonatomic , strong) UILabel *test;
-@property (nonatomic , strong) NSMutableArray *tests;
 @property (nonatomic , strong) UIButton *action;
 
 @end
 
 @implementation ViewController
-
-- (NSMutableArray *)tests {
-    if (_tests == nil) {
-        _tests = [NSMutableArray array];
-    }
-    return _tests;
-}
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -56,10 +48,10 @@
 - (void)clickAction:(UIButton *)button {
     button.selected = !button.selected;
     if (button.selected) {
-        [self.view addPointWithObject:self.test pointWidth:5];
-        [self.view addPointWithTabVc:self.tabBarController pointWidth:5];
+        [self.view addPointWithTarget:self.test];
+        [self.view addPointWithTabVc:self.tabBarController];
     } else {
-        [self.view removePointWithObject:self.test];
+        [self.view removePointWithTarget:self.test];
         [self.view removePointWithTabVc:self.tabBarController];
     }
 }

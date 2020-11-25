@@ -25,27 +25,19 @@ static NSString *GHBadgeKey = @"GHBadgeKey";
     return objc_getAssociatedObject(self, &GHBadgeKey);
 }
 
-- (void)addPointWithObject:(UIView *)object pointWidth:(CGFloat)pointWidth width:(CGFloat)width {
-    if (!object) {
+- (void)addPointWithTarget:(UIView *)targetView {
+    if (!targetView) {
         return;
     }
-    [self addBadgeWithText:@"" backgroundColor:[UIColor redColor] textColor:[UIColor clearColor] font:0 badgeFrame:CGRectMake(width -pointWidth * 0.5, -pointWidth * 0.5, pointWidth, pointWidth) superObject:object];
+    [self addBadgeWithText:@"" backgroundColor:[UIColor redColor] textColor:[UIColor clearColor] font:0 badgeFrame:CGRectMake(targetView.frame.size.width - 5 * 0.5, - 5 * 0.5, 5, 5) superObject:targetView];
 }
 
-- (void)addPointWithObject:(UIView *)object pointWidth:(CGFloat)pointWidth {
-    if (!object) {
-        return;
-    }
-    
-    [self addBadgeWithText:@"" backgroundColor:[UIColor redColor] textColor:[UIColor clearColor] font:0 badgeFrame:CGRectMake(object.frame.size.width -pointWidth * 0.5, -pointWidth * 0.5, pointWidth, pointWidth) superObject:object];
-}
-
-- (void)addPointWithTabVc:(UITabBarController *)tabVc pointWidth:(CGFloat)pointWidth {
+- (void)addPointWithTabVc:(UITabBarController *)tabVc {
     for (UIView *button in tabVc.tabBar.subviews) {
         if ([button isKindOfClass:NSClassFromString(@"UITabBarButton")]) {
             for (UIView *imageView in button.subviews) {
                 if ([imageView isKindOfClass:NSClassFromString(@"UITabBarSwappableImageView")]) {
-                    [tabVc.view addPointWithObject:imageView pointWidth:pointWidth];
+                    [tabVc.view addPointWithTarget:imageView];
                 }
             }
         }
@@ -75,12 +67,12 @@ static NSString *GHBadgeKey = @"GHBadgeKey";
     [superObject bringSubviewToFront:self.badge];
 }
 
-- (void)removePointWithObject:(UIView *)object {
-    if (!object) {
+- (void)removePointWithTarget:(UIView *)targetView {
+    if (!targetView) {
         return;
     }
     UIView *aView;
-    for (UIView *view in object.subviews) {
+    for (UIView *view in targetView.subviews) {
         if (view.tag == 991) {
             aView = view;
             break;
@@ -99,11 +91,14 @@ static NSString *GHBadgeKey = @"GHBadgeKey";
         if ([button isKindOfClass:NSClassFromString(@"UITabBarButton")]) {
             for (UIView *imageView in button.subviews) {
                 if ([imageView isKindOfClass:NSClassFromString(@"UITabBarSwappableImageView")]) {
-                    [tabVc.view removePointWithObject:imageView];
+                    [tabVc.view removePointWithTarget:imageView];
                 }
             }
         }
     }
 }
 
+- (void)removeAllPoint {
+    
+}
 @end
