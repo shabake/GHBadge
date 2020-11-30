@@ -25,21 +25,18 @@ NS_ASSUME_NONNULL_BEGIN
  *  给目标view移除角标
  *  @param targetView  要移除角标的view
  */
-
 - (void)removePointWithTarget:(UIView *)targetView;
 
 /**
  *  给TabBarItem增加角标
  *  @param tabVc 要添加角标的UITabBarController
  */
-
 - (void)addPointWithTabVc:(UITabBarController *)tabVc;
 
 /**
  *  给TabBarItem移除角标
  *  @param tabVc 要移除角标的UITabBarController
  */
-
 - (void)removePointWithTabVc:(UITabBarController *)tabVc;
 
 @end

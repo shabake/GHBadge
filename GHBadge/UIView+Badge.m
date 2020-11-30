@@ -15,7 +15,8 @@
 
 @implementation UIView (Badge)
 
-
+#define kBadgeWidth 10
+#define kBadgeHeight 10
 
 /**
  *  存放Badge的数组
@@ -38,7 +39,7 @@ static NSString *GHBadgesKey = @"GHBadgesKey";
     if (!targetView) {
         return;
     }
-    [self addBadgeWithText:@"" backgroundColor:[UIColor redColor] textColor:[UIColor clearColor] font:0 badgeFrame:CGRectMake(targetView.frame.size.width - 5 * 0.5, - 5 * 0.5, 5, 5) superObject:targetView];
+    [self addBadgeWithText:@"" backgroundColor:[UIColor redColor] textColor:[UIColor clearColor] font:0 badgeFrame:CGRectMake(targetView.frame.size.width - kBadgeWidth * 0.5, - kBadgeHeight * 0.5, kBadgeWidth, kBadgeHeight) superObject:targetView];
 }
 
 - (void)addPointWithTabVc:(UITabBarController *)tabVc {
@@ -70,10 +71,6 @@ static NSString *GHBadgesKey = @"GHBadgesKey";
     badge.layer.masksToBounds = YES;
     badge.layer.cornerRadius = badgeFrame.size.height  * 0.5;
     [self.badges addObject:badge];
-    
-    for (UILabel *badge in self.badges) {
-        NSLog(@"%ld",(long)badge.tag);
-    }
     [superObject addSubview:badge];
     [superObject bringSubviewToFront:badge];
 }
@@ -84,7 +81,7 @@ static NSString *GHBadgesKey = @"GHBadgesKey";
     }
     UIView *aView;
     for (UIView *view in targetView.subviews) {
-        if (view.tag ==  200) {
+        if (view.tag == 200) {
             aView = view;
             break;
         }
