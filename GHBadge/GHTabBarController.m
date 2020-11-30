@@ -17,17 +17,14 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-
+    
     [self setupVc];
-
 }
 
 - (void)setupVc  {
     ViewController *vc = [[ViewController alloc]init];
     [self addChildViewControllerWithVC:vc title:@"首页" image:@"tabBar_home_normal" selectedImage:@"tabBar_home_selected"];
-
 }
-
 
 - (void)addChildViewControllerWithVC: (UIViewController *)vc
                                title: (NSString *)title

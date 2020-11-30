@@ -15,14 +15,23 @@
 
 @implementation UIView (Badge)
 
-static NSString *GHBadgeKey = @"GHBadgeKey";
 
-- (void)setBadge:(UILabel *)badge {
-    objc_setAssociatedObject(self, &GHBadgeKey, badge, OBJC_ASSOCIATION_RETAIN);
+
+/**
+ *  存放Badge的数组
+ */
+static NSString *GHBadgesKey = @"GHBadgesKey";
+
+- (void)setBadges:(NSMutableArray *)badges {
+    objc_setAssociatedObject(self, &GHBadgesKey, badges, OBJC_ASSOCIATION_RETAIN);
 }
 
-- (UILabel *)badge {
-    return objc_getAssociatedObject(self, &GHBadgeKey);
+- (NSMutableArray *)badges {
+    if (objc_getAssociatedObject(self, &GHBadgesKey) == nil) {
+        NSMutableArray *_badges = [NSMutableArray array];
+        objc_setAssociatedObject(self, &GHBadgesKey, _badges, OBJC_ASSOCIATION_RETAIN);
+    }
+    return objc_getAssociatedObject(self, &GHBadgesKey);
 }
 
 - (void)addPointWithTarget:(UIView *)targetView {
@@ -50,21 +59,23 @@ static NSString *GHBadgeKey = @"GHBadgeKey";
                     font:(CGFloat)font
               badgeFrame:(CGRect)badgeFrame
              superObject:(UIView *)superObject{
-    if (self.badge == nil) {
-        self.badge = [[UILabel alloc]init];
-        self.badge.tag = 991;
-        self.badge.textColor = textColor;
-        self.badge.text = text;
-        self.badge.backgroundColor = backgroundColor;
-        self.badge.textAlignment = NSTextAlignmentCenter;
-        self.badge.font = [UIFont systemFontOfSize:font];
-        self.badge.frame = badgeFrame;
-        self.badge.layer.masksToBounds = YES;
-        self.badge.layer.cornerRadius = badgeFrame.size.height  * 0.5;
-        objc_setAssociatedObject(self, &GHBadgeKey, self.badge, OBJC_ASSOCIATION_RETAIN);
+    UILabel *badge = [[UILabel alloc]init];
+    badge.textColor = textColor;
+    badge.text = text;
+    badge.tag = 200;
+    badge.backgroundColor = backgroundColor;
+    badge.textAlignment = NSTextAlignmentCenter;
+    badge.font = [UIFont systemFontOfSize:font];
+    badge.frame = badgeFrame;
+    badge.layer.masksToBounds = YES;
+    badge.layer.cornerRadius = badgeFrame.size.height  * 0.5;
+    [self.badges addObject:badge];
+    
+    for (UILabel *badge in self.badges) {
+        NSLog(@"%ld",(long)badge.tag);
     }
-    [superObject addSubview:self.badge];
-    [superObject bringSubviewToFront:self.badge];
+    [superObject addSubview:badge];
+    [superObject bringSubviewToFront:badge];
 }
 
 - (void)removePointWithTarget:(UIView *)targetView {
@@ -73,7 +84,7 @@ static NSString *GHBadgeKey = @"GHBadgeKey";
     }
     UIView *aView;
     for (UIView *view in targetView.subviews) {
-        if (view.tag == 991) {
+        if (view.tag ==  200) {
             aView = view;
             break;
         }
@@ -98,7 +109,4 @@ static NSString *GHBadgeKey = @"GHBadgeKey";
     }
 }
 
-- (void)removeAllPoint {
-    
-}
 @end

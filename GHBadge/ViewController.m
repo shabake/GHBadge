@@ -30,10 +30,10 @@
     [action setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
     self.action = action;
     
-   [action setTitleColor:[UIColor redColor] forState:UIControlStateSelected];
+    [action setTitleColor:[UIColor redColor] forState:UIControlStateSelected];
     [action addTarget:self action:@selector(clickAction:) forControlEvents:UIControlEventTouchUpInside];
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc]initWithCustomView:action];
-
+    
     UILabel *test1 = [[UILabel alloc]init];
     test1.text = @"测试一下";
     test1.textAlignment = NSTextAlignmentCenter;
@@ -52,7 +52,7 @@
         [self.view addPointWithTabVc:self.tabBarController];
     } else {
         [self.view removePointWithTarget:self.test];
-        [self.view removePointWithTabVc:self.tabBarController];
+//        [self.view removePointWithTabVc:self.tabBarController];
     }
 }
 
