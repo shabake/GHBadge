@@ -9,6 +9,18 @@
 #import "UIView+Badge.h"
 #import <objc/runtime.h>
 
+
+typedef NS_ENUM(NSInteger, GHBadgeType) {
+    GHBadgeTypeView = 0,
+    GHBadgeTypeButton,
+    GHBadgeTypeLabel,
+    GHBadgeTypImageView,
+    GHBadgeTypeTabBarItem,
+    GHBadgeTypeBarButtonItem,
+    GHBadgeTypeUnknown,
+    
+};
+
 @interface UIView()
 
 @end
@@ -21,66 +33,104 @@
 /**
  *  存放Badge的数组
  */
-static NSString *GHBadgesKey = @"GHBadgesKey";
+static NSString *GHBadgesDictKey = @"GHBadgesDictKey";
 
-- (void)setBadges:(NSMutableArray *)badges {
-    objc_setAssociatedObject(self, &GHBadgesKey, badges, OBJC_ASSOCIATION_RETAIN);
+- (void)setBadgesDict:(NSMutableArray *)badgesDict {
+    objc_setAssociatedObject(self, &GHBadgesDictKey, badgesDict, OBJC_ASSOCIATION_RETAIN);
 }
 
-- (NSMutableArray *)badges {
-    if (objc_getAssociatedObject(self, &GHBadgesKey) == nil) {
-        NSMutableArray *_badges = [NSMutableArray array];
-        objc_setAssociatedObject(self, &GHBadgesKey, _badges, OBJC_ASSOCIATION_RETAIN);
+- (NSMutableArray *)badgesDict {
+    if (objc_getAssociatedObject(self, &GHBadgesDictKey) == nil) {
+        NSMutableArray *_badgesDict = [NSMutableArray array];
+        objc_setAssociatedObject(self, &GHBadgesDictKey, _badgesDict, OBJC_ASSOCIATION_RETAIN);
     }
-    return objc_getAssociatedObject(self, &GHBadgesKey);
+    return objc_getAssociatedObject(self, &GHBadgesDictKey);
 }
 
-- (void)addPointWithTarget:(UIView *)targetView {
-    if (!targetView) {
+/**
+ *  存放Badge的数组
+ */
+static NSString *GHBadgesTypeKey = @"GHBadgesTypeKey";
+
+- (void)setBadgeType:(GHBadgeType)badgeType {
+    objc_setAssociatedObject(self, &GHBadgesTypeKey, @(badgeType), OBJC_ASSOCIATION_RETAIN);
+}
+
+- (GHBadgeType)badgeType {
+    NSNumber *badgeTypeNumber = objc_getAssociatedObject(self, &GHBadgesTypeKey);
+    return (GHBadgeType)badgeTypeNumber.integerValue;
+}
+
+- (void)addPoint {
+    if (!self) {
         return;
     }
-    [self addBadgeWithText:@"" backgroundColor:[UIColor redColor] textColor:[UIColor clearColor] font:0 badgeFrame:CGRectMake(targetView.frame.size.width - kBadgeWidth * 0.5, - kBadgeHeight * 0.5, kBadgeWidth, kBadgeHeight) superObject:targetView];
+    [self addBadgeWithText:@"" backgroundColor:[UIColor redColor] textColor:[UIColor clearColor] font:0 badgeFrame:CGRectMake(self.frame.size.width - kBadgeWidth * 0.5, - kBadgeHeight * 0.5, kBadgeWidth, kBadgeHeight) superObject:self];
 }
 
-- (void)addPointWithTabVc:(UITabBarController *)tabVc {
-    for (UIView *button in tabVc.tabBar.subviews) {
-        if ([button isKindOfClass:NSClassFromString(@"UITabBarButton")]) {
-            for (UIView *imageView in button.subviews) {
-                if ([imageView isKindOfClass:NSClassFromString(@"UITabBarSwappableImageView")]) {
-                    [tabVc.view addPointWithTarget:imageView];
-                }
-            }
+- (void)addPointWithText:(NSString *)text {
+    if (!self) {
+        return;
+    }
+    CGSize size = [self sizeWithText:text andFont:[UIFont boldSystemFontOfSize:10]];
+    [self addBadgeWithText:text backgroundColor:[UIColor redColor] textColor:[UIColor whiteColor] font:[UIFont boldSystemFontOfSize:10] badgeFrame:CGRectMake(self.frame.size.width, - size.height * 0.5, 20, 20) superObject:self];
+}
+
+- (void)addPointToTabVcWithIndex:(NSInteger)index {
+    UITabBarController *tabBarVc = [self tabBarControllerFromView:self];
+    NSMutableArray *tabBarButtons = [NSMutableArray array];
+    for (UIView *view in tabBarVc.tabBar.subviews) {
+        if ([view isKindOfClass:NSClassFromString(@"UITabBarButton")]) {
+            [tabBarButtons addObject:view];
+        }
+    }
+    UIView *view = tabBarButtons[index];
+    for (UIView *imageView in view.subviews) {
+        if ([imageView isKindOfClass:NSClassFromString(@"UITabBarSwappableImageView")]) {
+            [imageView addPoint];
         }
     }
 }
 
-- (void)addBadgeWithText:(NSString *)text
-         backgroundColor:(UIColor *)backgroundColor
-               textColor:(UIColor *)textColor
-                    font:(CGFloat)font
-              badgeFrame:(CGRect)badgeFrame
-             superObject:(UIView *)superObject{
+- (void)addBadgeWithText:(NSString *)text backgroundColor:(UIColor *)backgroundColor textColor:(UIColor *)textColor font:(UIFont *)font badgeFrame:(CGRect)badgeFrame  superObject:(UIView *)superObject {
+    GHBadgeType type = GHBadgeTypeView;
+    if ([superObject isKindOfClass:NSClassFromString(@"UITabBarSwappableImageView")]) {
+        type = GHBadgeTypeTabBarItem;
+    } else if ([superObject isKindOfClass:NSClassFromString(@"UIImageView")]) {
+        type = GHBadgeTypImageView;
+    } else if ([superObject isKindOfClass:NSClassFromString(@"UIButton")]) {
+        type = GHBadgeTypeButton;
+    } else if ([superObject isKindOfClass:NSClassFromString(@"UIView")]) {
+        type = GHBadgeTypeView;
+    } else if ([superObject isKindOfClass:NSClassFromString(@"UILabel")]) {
+        type = GHBadgeTypeLabel;
+    } else {
+        type = GHBadgeTypeUnknown;
+    }
     UILabel *badge = [[UILabel alloc]init];
     badge.textColor = textColor;
     badge.text = text;
     badge.tag = 200;
     badge.backgroundColor = backgroundColor;
     badge.textAlignment = NSTextAlignmentCenter;
-    badge.font = [UIFont systemFontOfSize:font];
+    badge.font = font;
     badge.frame = badgeFrame;
     badge.layer.masksToBounds = YES;
     badge.layer.cornerRadius = badgeFrame.size.height  * 0.5;
-    [self.badges addObject:badge];
+    NSMutableDictionary *dict = [NSMutableDictionary dictionary];
+    dict[@"badge"] = badge;
+    dict[@"type"] = @(type);
+    [self.badgesDict addObject:dict];
     [superObject addSubview:badge];
     [superObject bringSubviewToFront:badge];
 }
 
-- (void)removePointWithTarget:(UIView *)targetView {
-    if (!targetView) {
+- (void)removePoint{
+    if (!self) {
         return;
     }
     UIView *aView;
-    for (UIView *view in targetView.subviews) {
+    for (UIView *view in self.subviews) {
         if (view.tag == 200) {
             aView = view;
             break;
@@ -91,19 +141,72 @@ static NSString *GHBadgesKey = @"GHBadgesKey";
     }
 }
 
-- (void)removePointWithTabVc:(UITabBarController *)tabVc {
-    if (!tabVc) {
+- (void)removePointFromTabVcWithIndex:(NSInteger)index {
+    UITabBarController *tabBarVc = [self tabBarControllerFromView:self];
+    if (!self) {
         return;
     }
-    for (UIView *button in tabVc.tabBar.subviews) {
-        if ([button isKindOfClass:NSClassFromString(@"UITabBarButton")]) {
-            for (UIView *imageView in button.subviews) {
-                if ([imageView isKindOfClass:NSClassFromString(@"UITabBarSwappableImageView")]) {
-                    [tabVc.view removePointWithTarget:imageView];
-                }
-            }
+    
+    NSMutableArray *tabBarButtons = [NSMutableArray array];
+    for (UIView *view in tabBarVc.tabBar.subviews) {
+        if ([view isKindOfClass:NSClassFromString(@"UITabBarButton")]) {
+            [tabBarButtons addObject:view];
         }
     }
+    UIView *view = tabBarButtons[index];
+    for (UIView *imageView in view.subviews) {
+        if ([imageView isKindOfClass:NSClassFromString(@"UITabBarSwappableImageView")]) {
+            [imageView removePoint];
+        }
+    }
+}
+
+- (UIViewController *)viewControllerFromView:(UIView *)view {
+    for (UIView *next = [view superview]; next; next = next.superview) {
+        UIResponder *nextResponder = [next nextResponder];
+        if ([nextResponder isKindOfClass:[UIViewController class]]) {
+            return (UIViewController *)nextResponder;
+        }
+    }
+    return nil;
+}
+
+- (UINavigationController *)navigationControllerFromView:(UIView *)view {
+    for (UIView *next = [view superview]; next; next = next.superview) {
+        UIResponder *nextResponder = [next nextResponder];
+        if ([nextResponder isKindOfClass:[UINavigationController class]]) {
+            return (UINavigationController *)nextResponder;
+        }
+    }
+    return nil;
+}
+
+- (UITabBarController *)tabBarControllerFromView:(UIView *)view {
+    for (UIView *next = [view superview]; next; next = next.superview) {
+        UIResponder *nextResponder = [next nextResponder];
+        if ([nextResponder isKindOfClass:[UITabBarController class]]) {
+            return (UITabBarController *)nextResponder;
+        }
+    }
+    return nil;
+}
+
+
+- (CGSize)sizeWithText:(NSString *)text andFont:(UIFont *)font{
+    return [self sizeWithText:text andFont:font andMaxSize:CGSizeMake(MAXFLOAT, MAXFLOAT)];
+}
+
+- (CGSize)sizeWithText:(NSString *)text andFont:(UIFont *)font andMaxSize:(CGSize)maxSize {
+    CGSize expectedLabelSize = CGSizeZero;
+    
+    NSMutableParagraphStyle *paragraphStyle = [[NSMutableParagraphStyle alloc] init];
+    paragraphStyle.lineBreakMode = NSLineBreakByWordWrapping;
+    [paragraphStyle setLineSpacing:0];
+    NSDictionary *attributes = @{NSFontAttributeName:font, NSParagraphStyleAttributeName:paragraphStyle.copy};
+    
+    expectedLabelSize = [text boundingRectWithSize:maxSize options:NSStringDrawingUsesLineFragmentOrigin | NSStringDrawingUsesFontLeading attributes:attributes context:nil].size;
+    
+    return CGSizeMake(ceil(expectedLabelSize.width), ceil(expectedLabelSize.height));
 }
 
 @end

@@ -15,6 +15,7 @@
 @property (nonatomic , strong) UILabel *label;
 @property (nonatomic , strong) UIButton *action;
 @property (nonatomic , strong) UIButton *button;
+@property (nonatomic , strong) UIButton *button1;
 @property (nonatomic , strong) UIImageView *imageView;
 @property (nonatomic , strong) UIView *view0;
 
@@ -57,6 +58,17 @@
         make.top.equalTo(self.label.mas_bottom).offset(20);
     }];
     
+    UIButton *button1 = [[UIButton alloc]init];
+    [button1 setTitle:@"button1" forState:UIControlStateNormal];
+    button1.titleLabel.textAlignment = NSTextAlignmentCenter;
+    [button1 setTitleColor:[UIColor purpleColor] forState:UIControlStateNormal];
+    self.button1 = button1;
+    [self.view addSubview:button1];
+    [button1 mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.equalTo(self.button.mas_right).offset(50);
+        make.top.equalTo(self.button);
+    }];
+    
     UIImageView *imageView = [[UIImageView alloc]init];
     imageView.backgroundColor = [UIColor blueColor];
     self.imageView = imageView;
@@ -94,25 +106,22 @@
         make.top.equalTo(self.imageView.mas_bottom).offset(20);
         make.height.equalTo(@50);
         make.width.equalTo(@100);
-        
     }];
 }
 
 - (void)clickAction:(UIButton *)button {
     button.selected = !button.selected;
     if (button.selected) {
-        [self.view addPointWithTarget:self.label];
-        [self.view addPointWithTarget:self.button];
-        [self.view addPointWithTarget:self.imageView];
-        [self.view addPointWithTarget:self.view0];
-        [self.view addPointWithTabVc:self.tabBarController];
-        
+        [self.button addPoint];
+        [self.button1 addPoint];
+        [self.label addPointWithText:@"22"];
+        [self.imageView addPointWithText:@"."];
+        [self.view0 addPoint];
+        [self.view addPointToTabVcWithIndex:1];
     } else {
-        [self.view removePointWithTarget:self.label];
-        [self.view removePointWithTarget:self.button];
-        [self.view removePointWithTarget:self.imageView];
-        [self.view removePointWithTarget:self.view0];
-        [self.view removePointWithTabVc:self.tabBarController];
+        [self.view0 removePoint];
+        [self.button removePoint];
+        [self.view removePointFromTabVcWithIndex:1];
     }
 }
 

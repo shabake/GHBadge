@@ -24,6 +24,9 @@
 - (void)setupVc  {
     ViewController *vc = [[ViewController alloc]init];
     [self addChildViewControllerWithVC:vc title:@"首页" image:@"tabBar_home_normal" selectedImage:@"tabBar_home_selected"];
+    
+    ViewController *vc1 = [[ViewController alloc]init];
+    [self addChildViewControllerWithVC:vc1 title:@"首页" image:@"tabBar_home_normal" selectedImage:@"tabBar_home_selected"];
 }
 
 - (void)addChildViewControllerWithVC: (UIViewController *)vc
