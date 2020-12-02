@@ -17,7 +17,7 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    
+    self.navigationItem.title = @"111";
     [self setupVc];
 }
 
@@ -39,7 +39,8 @@
     vc.tabBarItem.selectedImage = [[UIImage imageNamed:selectedImageName] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
     NSDictionary *dict = [NSDictionary dictionaryWithObject:[UIColor orangeColor] forKey:NSForegroundColorAttributeName];
     [vc.tabBarItem setTitleTextAttributes:dict forState:UIControlStateSelected];
-    [self addChildViewController:[[UINavigationController alloc] initWithRootViewController:vc]];
+    UINavigationController *nav = [[UINavigationController alloc]initWithRootViewController:vc];
+    [self addChildViewController:nav];
 }
 
 @end

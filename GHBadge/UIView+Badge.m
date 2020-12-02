@@ -18,7 +18,6 @@ typedef NS_ENUM(NSInteger, GHBadgeType) {
     GHBadgeTypeTabBarItem,
     GHBadgeTypeBarButtonItem,
     GHBadgeTypeUnknown,
-    
 };
 
 @interface UIView()
@@ -27,8 +26,8 @@ typedef NS_ENUM(NSInteger, GHBadgeType) {
 
 @implementation UIView (Badge)
 
-#define kBadgeWidth 10
-#define kBadgeHeight 10
+#define kBadgeWidth 5
+#define kBadgeHeight 5
 
 /**
  *  存放Badge的数组
@@ -65,6 +64,7 @@ static NSString *GHBadgesTypeKey = @"GHBadgesTypeKey";
     if (!self) {
         return;
     }
+    [self removePoint];
     [self addBadgeWithText:@"" backgroundColor:[UIColor redColor] textColor:[UIColor clearColor] font:0 badgeFrame:CGRectMake(self.frame.size.width - kBadgeWidth * 0.5, - kBadgeHeight * 0.5, kBadgeWidth, kBadgeHeight) superObject:self];
 }
 
@@ -72,12 +72,16 @@ static NSString *GHBadgesTypeKey = @"GHBadgesTypeKey";
     if (!self) {
         return;
     }
+    if (text.intValue > 99) {
+        text = @"99+";
+    }
     CGSize size = [self sizeWithText:text andFont:[UIFont boldSystemFontOfSize:10]];
-    [self addBadgeWithText:text backgroundColor:[UIColor redColor] textColor:[UIColor whiteColor] font:[UIFont boldSystemFontOfSize:10] badgeFrame:CGRectMake(self.frame.size.width, - size.height * 0.5, 20, 20) superObject:self];
+    
+    [self addBadgeWithText:text backgroundColor:[UIColor redColor] textColor:[UIColor whiteColor] font:[UIFont boldSystemFontOfSize:10] badgeFrame:CGRectMake(self.frame.size.width, - size.height * 0.5, size.width > 20 ?size.width:20 , size.height > 20 ?size.height:20) superObject:self];
 }
 
 - (void)addPointToTabVcWithIndex:(NSInteger)index {
-    UITabBarController *tabBarVc = [self tabBarControllerFromView:self];
+    UITabBarController *tabBarVc = [self currentTabarController];
     NSMutableArray *tabBarButtons = [NSMutableArray array];
     for (UIView *view in tabBarVc.tabBar.subviews) {
         if ([view isKindOfClass:NSClassFromString(@"UITabBarButton")]) {
@@ -142,7 +146,7 @@ static NSString *GHBadgesTypeKey = @"GHBadgesTypeKey";
 }
 
 - (void)removePointFromTabVcWithIndex:(NSInteger)index {
-    UITabBarController *tabBarVc = [self tabBarControllerFromView:self];
+    UITabBarController *tabBarVc = [self currentTabarController];
     if (!self) {
         return;
     }
@@ -181,17 +185,12 @@ static NSString *GHBadgesTypeKey = @"GHBadgesTypeKey";
     return nil;
 }
 
-- (UITabBarController *)tabBarControllerFromView:(UIView *)view {
-    for (UIView *next = [view superview]; next; next = next.superview) {
-        UIResponder *nextResponder = [next nextResponder];
-        if ([nextResponder isKindOfClass:[UITabBarController class]]) {
-            return (UITabBarController *)nextResponder;
-        }
-    }
-    return nil;
-}
-
-
+/**
+ *  计算文字的
+ *  @param text 当前文字
+ *  @param font 当前字号
+ *  @return size
+ */
 - (CGSize)sizeWithText:(NSString *)text andFont:(UIFont *)font{
     return [self sizeWithText:text andFont:font andMaxSize:CGSizeMake(MAXFLOAT, MAXFLOAT)];
 }
@@ -201,12 +200,47 @@ static NSString *GHBadgesTypeKey = @"GHBadgesTypeKey";
     
     NSMutableParagraphStyle *paragraphStyle = [[NSMutableParagraphStyle alloc] init];
     paragraphStyle.lineBreakMode = NSLineBreakByWordWrapping;
+    paragraphStyle.alignment = NSTextAlignmentJustified; // 两端对齐
     [paragraphStyle setLineSpacing:0];
     NSDictionary *attributes = @{NSFontAttributeName:font, NSParagraphStyleAttributeName:paragraphStyle.copy};
-    
     expectedLabelSize = [text boundingRectWithSize:maxSize options:NSStringDrawingUsesLineFragmentOrigin | NSStringDrawingUsesFontLeading attributes:attributes context:nil].size;
     
     return CGSizeMake(ceil(expectedLabelSize.width), ceil(expectedLabelSize.height));
 }
 
+/**
+ *  获取tabBarController
+ */
+- (UITabBarController *)currentTabarController {
+    UIWindow *window = [self getKeyWindow];
+    UIViewController *tabbarController = window.rootViewController;
+    if ([tabbarController isKindOfClass:[UITabBarController class]]) {
+        return (UITabBarController *)tabbarController;
+    }
+    return nil;
+}
+
+/**
+ *  获取当前keyWindow
+ */
+- (UIWindow *)getKeyWindow {
+    if (@available(iOS 13.0, *)) {
+        for (UIWindowScene* windowScene in [UIApplication sharedApplication].connectedScenes) {
+            if (windowScene.activationState == UISceneActivationStateForegroundActive) {
+                for (UIWindow *window in windowScene.windows) {
+                    if (window.isKeyWindow) {
+                        return window;
+                        break;
+                    }
+                }
+            }
+        }
+    } else {
+        return [UIApplication sharedApplication].keyWindow;
+    }
+    return nil;
+}
+
 @end
+
+

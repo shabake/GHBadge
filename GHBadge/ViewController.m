@@ -35,7 +35,7 @@
     self.action = action;
     
     [action addTarget:self action:@selector(clickAction:) forControlEvents:UIControlEventTouchUpInside];
-    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc]initWithCustomView:action];
+    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc]initWithTitle:@"aa" style:UIBarButtonItemStylePlain target:self action:@selector(clickAction)];
     
     UILabel *label = [[UILabel alloc]init];
     label.text = @"label";
@@ -109,20 +109,13 @@
     }];
 }
 
-- (void)clickAction:(UIButton *)button {
-    button.selected = !button.selected;
-    if (button.selected) {
-        [self.button addPoint];
-        [self.button1 addPoint];
-        [self.label addPointWithText:@"22"];
-        [self.imageView addPointWithText:@"."];
-        [self.view0 addPoint];
-        [self.view addPointToTabVcWithIndex:1];
-    } else {
-        [self.view0 removePoint];
-        [self.button removePoint];
-        [self.view removePointFromTabVcWithIndex:1];
-    }
+- (void)clickAction {
+    [self.button addPoint];
+    [self.button1 addPoint];
+    [self.label addPointWithText:@"22"];
+    [self.imageView addPointWithText:@"101"];
+    [self.view0 addPoint];
+    [self.view addPointToTabVcWithIndex:1];
 }
 
 @end
